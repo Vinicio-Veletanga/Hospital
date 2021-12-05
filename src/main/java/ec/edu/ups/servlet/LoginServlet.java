@@ -3,7 +3,6 @@ package ec.edu.ups.servlet;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +17,7 @@ import ec.edu.ups.model.Persona;
 /**
  * Servlet implementation class LoginServlet
  */
-@WebServlet("/LoginServlet")
+@WebServlet("/Login")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -38,8 +37,13 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		RequestDispatcher rd = request.getRequestDispatcher("index.html");
-		rd.forward(request, response);
+		request.getRequestDispatcher("/index.html").forward(request, response);
+		HttpSession session = request.getSession(true);
+		System.out.println("Session GET: " + session);
+		/*
+		 * if (request.getParameter("CerrarSesionServlet") != null) {
+		 * session.invalidate(); response.sendRedirect("/index.jsp"); }
+		 */
 	}
 
 	/**
@@ -47,23 +51,33 @@ public class LoginServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		System.out.println(personaDAO.find());
-		
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
 		String url = null;
-		HttpSession session = request.getSession(true);
+		
 		
 		listaPersonas = personaDAO.find();
-		System.out.println(email);
-		System.out.println(password);
+		
 		
 		for (Persona persona : listaPersonas) {
 			
 			if (persona.getPassword().equals(password) && persona.getCorreo().equals(email)) {
-				System.out.println("Paciente encontrado: " + persona.toString());
+				HttpSession session = request.getSession(true);
 				session.setAttribute("persona", persona);
-				getServletContext().getRequestDispatcher("/admin/index.jsp").forward(request, response);
+				
+				if (persona.getRol().equals("Doctor")) {
+					url = "/Doctores/Doctor.jsp";
+				}
+				if (persona.getRol().equals("Secretaria")) {
+					url = "/Secretarias/homeSecretaria.jsp";
+				}
+				if (persona.getRol().equals("Administrador")) {
+					url = "/Administradores/index.jsp";
+				}
+				if (persona.getRol().equals("Paciente")) {
+					url = "/Pacientes/homePaciente.jsp";
+				}
+				break;
 			} else {
 				url = "/Public/error.jsp";
 			}

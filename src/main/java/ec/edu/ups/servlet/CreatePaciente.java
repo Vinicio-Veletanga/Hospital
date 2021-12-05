@@ -11,14 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 import ec.edu.ups.dao.FactoryDAO;
 import ec.edu.ups.dao.PersonaDAO;
 import ec.edu.ups.model.Persona;
-import ec.edu.ups.utils.Envio;
-import ec.edu.ups.utils.GeneratePassword;
 
 /**
- * Servlet implementation class CreateSecretaria
+ * Servlet implementation class CreatePaciente
  */
-
-public class CreateUser extends HttpServlet {
+@WebServlet("/CreatePaciente")
+public class CreatePaciente extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private PersonaDAO personaDAO;
 	private Persona persona;
@@ -26,8 +24,8 @@ public class CreateUser extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CreateUser() {
-        persona = new Persona();
+    public CreatePaciente() {
+    	persona = new Persona();
         personaDAO = FactoryDAO.getFactoryDAO().getPersonaDAO();
     }
 
@@ -35,20 +33,21 @@ public class CreateUser extends HttpServlet {
 	 * @see Servlet#init(ServletConfig)
 	 */
 	public void init(ServletConfig config) throws ServletException {
+		// TODO Auto-generated method stub
 	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/Usuarios/AddUser.jsp").forward(request, response);
+		request.getRequestDispatcher("/Usuarios/AddPaciente.jsp").forward(request, response);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String url;
+String url;
 		
 		try {
 			persona.setNombres(request.getParameter("nombres"));
@@ -57,18 +56,14 @@ public class CreateUser extends HttpServlet {
 			persona.setDireccion(request.getParameter("direccion"));
 			persona.setTelefono(request.getParameter("telefono"));
 			persona.setCorreo(request.getParameter("correo"));
-			persona.setRol(request.getParameter("rol"));
-			persona.setPassword(GeneratePassword.generateRandomPassword(5));
+			persona.setRol("Paciente");
+			persona.setPassword(request.getParameter("password"));
 			
 			personaDAO.create(persona);
 			
-			Persona personaEnvio = personaDAO.read(request.getParameter("cedula"));
-			
-			Envio.envioCorreo(personaEnvio.getCorreo(), personaEnvio.getNombres(), personaEnvio.getApellidos(), personaEnvio.getPassword());
-			
 			url = "index.html";
 		} catch (Exception e) {
-			url = "/Usuarios/addUser.jsp";
+			url = "/Usuarios/AddPaciente.jsp";
 		}
 		
 		request.getRequestDispatcher(url).forward(request, response);

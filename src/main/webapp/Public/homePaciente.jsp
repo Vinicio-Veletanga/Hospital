@@ -9,7 +9,9 @@
 <body>
 	<h1>Bienvenido Administrador</h1>
 	
-	<a href="/Hospital/CerrarSesionServlet">Cerrar Sesion</a>
+	<a href="/Hospital/CerrarSesion">Cerrar Sesion</a>
+	
+	<strong>Usuario: <%=session.getAttribute("persona") %></strong><br>
 	
 	
 	

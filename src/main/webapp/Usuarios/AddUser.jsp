@@ -4,8 +4,8 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<link rel="stylesheet" type="text/css" media="screen" href="../css/formularioRegistro.css" />
-<script type="text/javascript" src="../js/login.js"></script>
+<link rel="stylesheet" type="text/css" media="screen" href="/Hospital/css/formularioRegistro.css" />
+<script type="text/javascript" src="/Hospital/js/login.js"></script>
 <title>Crear Cuenta</title>
 </head>
 <body>
@@ -29,12 +29,12 @@
 			<option>Seleccione el Rol</option>
 			<option value="Doctor">Doctor</option>
 			<option value="Secretaria">Secretaria</option>
+			<option value="Administrador">Administrador</option>
 		</select>
 		<br>
-		<input class="controls" type="password" name="password" id="password" placeholder="Ingrese su contraseña" required>
 		<p>Estoy de acuerdo con <a href="#">Terminos y condiciones</a></p>
 		<input class="botons" type="submit" value="Crear Usuario" onclick="validar">
-		<p><a href="../index.html">¿Ya tengo cuenta?</a></p>
+		<p><a href="/Hospital/index.html">¿Ya tengo cuenta?</a></p>
 	</form>
 	
 </body>

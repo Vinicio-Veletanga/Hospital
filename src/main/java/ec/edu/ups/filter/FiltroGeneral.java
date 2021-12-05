@@ -8,27 +8,30 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ec.edu.ups.dao.FactoryDAO;
 import ec.edu.ups.dao.PersonaDAO;
 import ec.edu.ups.model.Persona;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 /**
- * Servlet Filter implementation class FiltroSecretaria
+ * Servlet Filter implementation class Filtro
  */
-@WebFilter(servletNames={"/AdminListarUsuarios","/AdminListarDoctores","/AdminListarSecretarias","/AdminListarFacturas","/CerrarSesionServlet","CreateUser"})
+@WebFilter(
+		servletNames = { "CreateUser", "CerrarSesionServlet"})
 public class FiltroGeneral implements Filter {
+	
 	private PersonaDAO personaDAO;
 	private Persona persona;
-	
 
     /**
      * Default constructor. 
      */
     public FiltroGeneral() {
-        // TODO Auto-generated constructor stub
+        personaDAO = FactoryDAO.getFactoryDAO().getPersonaDAO();
+        persona = new Persona();
     }
 
 	/**
@@ -42,29 +45,24 @@ public class FiltroGeneral implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		// TODO Auto-generated method stub
-		// place your code here
+
 		HttpSession session = ((HttpServletRequest)request).getSession();
-		// pass the request along the filter chain
-		System.out.println("Session: "+session.getAttribute("persona"));
+		
 		if (session.getAttribute("persona")!=null) {
 			try {
-				Persona utemp = new Persona();
-				utemp = (Persona)session.getAttribute("persona");
-				//SE BUSCA POR CEDULA
-				persona = personaDAO.read(utemp.getCedula());
-				
-				
+				Persona temporalPersona = new Persona();
+				temporalPersona = (Persona)session.getAttribute("persona");
+				persona = personaDAO.read(temporalPersona.getCedula());
 				chain.doFilter(request, response);
 			} catch (Exception e) {
-				// TODO: handle exception
-				System.out.println("Erro en filtro validando login: "+e.getMessage());
+				System.out.println("Error en filtro validando login: "+e.getMessage());
+				e.printStackTrace();
 				session.invalidate();
-				((HttpServletResponse)response).sendRedirect("/index.html");
+				((HttpServletResponse)response).sendRedirect("/Hospital/index.html");
 			}
 			
 		}else {
-			((HttpServletResponse)response).sendRedirect("/index.html");
+			((HttpServletResponse)response).sendRedirect("/Hospital/index.html");
 			session.invalidate();
 		}
 	}
@@ -73,7 +71,7 @@ public class FiltroGeneral implements Filter {
 	 * @see Filter#init(FilterConfig)
 	 */
 	public void init(FilterConfig fConfig) throws ServletException {
-		// TODO Auto-generated method stub
+		System.out.println("Filtro General");
 	}
 
 }

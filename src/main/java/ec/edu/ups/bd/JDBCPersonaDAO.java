@@ -39,8 +39,8 @@ public class JDBCPersonaDAO extends JDBCGenericDAO<Persona, String> implements P
 		try {
 			if (resultSet != null && resultSet.next()) {
 				persona = new Persona(resultSet.getInt("id_persona"), resultSet.getString("cedula"), resultSet.getString("apellidos"), 
-									resultSet.getString("nombres"), resultSet.getString("correo"), resultSet.getString("direccion"),
-									resultSet.getString("telefono"), resultSet.getString("rol"), resultSet.getString("password")
+									resultSet.getString("nombres"), resultSet.getString("direccion"), resultSet.getString("telefono"),
+									resultSet.getString("correo"), resultSet.getString("rol"), resultSet.getString("password")
 						);
 			}
 		} catch (SQLException e) {
